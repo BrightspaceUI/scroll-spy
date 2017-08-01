@@ -181,12 +181,12 @@
 
 			this.__isSpying = true;
 
-			var isPassiveSupported = this.__isPassiveSupported();
+			var options = (this.__isPassiveSupported() ? { passive: true } : false);
 
-			window.addEventListener('scroll', this.__spy, isPassiveSupported ? { passive: true } : false);
-			window.addEventListener('resize', this.__spy, isPassiveSupported ? { passive: true } : false);
-			document.addEventListener('touchmove', this.__spy, isPassiveSupported ? { passive: true } : false);
-			document.addEventListener('MSPointerMove', this.__spy, isPassiveSupported ? { passive: true } : false);
+			window.addEventListener('scroll', this.__spy, options);
+			window.addEventListener('resize', this.__spy, options);
+			document.addEventListener('touchmove', this.__spy, options);
+			document.addEventListener('MSPointerMove', this.__spy, options);
 
 			requestAnimationFrame(this.__spy);
 
@@ -196,12 +196,12 @@
 
 			this.__isSpying = false;
 
-			var isPassiveSupported = this.__isPassiveSupported();
+			var options = (this.__isPassiveSupported() ? { passive: true } : false);
 
-			window.removeEventListener('scroll', this.__spy, isPassiveSupported ? { passive: true } : false);
-			window.removeEventListener('resize', this.__spy, isPassiveSupported ? { passive: true } : false);
-			document.removeEventListener('touchmove', this.__spy, isPassiveSupported ? { passive: true } : false);
-			document.removeEventListener('MSPointerMove', this.__spy, isPassiveSupported ? { passive: true } : false);
+			window.removeEventListener('scroll', this.__spy, options);
+			window.removeEventListener('resize', this.__spy, options);
+			document.removeEventListener('touchmove', this.__spy, options);
+			document.removeEventListener('MSPointerMove', this.__spy, options);
 
 		},
 
