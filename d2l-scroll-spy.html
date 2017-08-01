@@ -1,0 +1,232 @@
+<link rel="import" href="../d2l-fastdom-import/fastdom.html">
+<script>
+(function() {
+	'use strict';
+
+	var ScrollSpy = {
+
+		__isEnabled: false,
+
+		__isSpying: false,
+
+		__points: [],
+
+		isPointRegistered: function(key) {
+			return (this.__getPointInfo(key) ? true : false);
+		},
+
+		registerPoint: function(key, node, options) {
+			if (!key || !node) {
+				return;
+			}
+			for (var i = 0; i < this.__points.length; i++) {
+				if (this.__points[i].key === key) {
+					return;
+				}
+			}
+			this.__points.push({
+				key: key,
+				node: node,
+				duration: (options && options.duration !== undefined && options.duration !== null) ? options.duration : 3000,
+				onceOnly: (options && options.onceOnly !== undefined && options.onceOnly !== null) ? options.onceOnly : false
+			});
+			this.__updateSpying();
+		},
+
+		reset: function() {
+			this.setEnabled(false);
+			this.__points = [];
+		},
+
+		setEnabled: function(isEnabled) {
+			this.__isEnabled = isEnabled;
+			this.__updateSpying();
+		},
+
+		unregisterPoint: function(key) {
+			if (!key) {
+				return;
+			}
+			for (var i = 0; i < this.__points.length; i++) {
+				if (this.__points[i].key === key) {
+					this.__points.splice(i, 1);
+					this.__updateSpying();
+					return;
+				}
+			}
+		},
+
+		__getPointInfo: function(key) {
+			for (var i = 0; i < this.__points.length; i++) {
+				if (this.__points[i].key === key) {
+					return this.__points[i];
+				}
+			}
+			return null;
+		},
+
+		__getSpyBoundaries: function() {
+			// area relative to document being viewed
+			//var spyTop = document.body.scrollTop;
+			var spyTop = window.pageYOffset;
+			var spyBottom = spyTop + window.innerHeight;
+			return {
+				top : spyTop,
+				bottom : spyBottom
+			};
+		},
+
+		__isPassiveSupported: function() {
+			var passiveSupported = false;
+			try {
+				var options = Object.defineProperty({}, 'passive', {
+					get: function() {
+						passiveSupported = true;
+					}
+				});
+				window.addEventListener('test', null, options);
+				/* eslint no-empty:0 */
+			} catch (err) {}
+			return passiveSupported;
+		},
+
+		__isPointBottomVisible: function(spyBoundaries, node) {
+			var pointOffsetBottom = node.offsetTop + node.offsetHeight;
+			return (pointOffsetBottom >= spyBoundaries.top && pointOffsetBottom <= spyBoundaries.bottom);
+		},
+
+		__spy: function() {
+
+			for (var i = 0; i < this.__points.length; i++) {
+				var point = this.__points[i];
+
+				if (point.onceOnly && point.spied) {
+					continue;
+				}
+
+				this.__spyPoint(point);
+
+			}
+
+		},
+
+		__spyPoint: function(point) {
+
+			fastdom.measure(function() {
+
+				var spyBoundaries = this.__getSpyBoundaries();
+				var isBottomVisible = this.__isPointBottomVisible(spyBoundaries, point.node);
+
+				if (isBottomVisible && !point.visible) {
+					this.__spyDelayed(point, true);
+				} else if (!isBottomVisible && point.visible) {
+					this.__spyDelayed(point, false);
+				}
+
+			}.bind(this));
+		},
+
+		__spyDelayed: function(point, isVisible) {
+
+			setTimeout(function() {
+
+				// bail if spying stopped during delay
+				if (!this.__isSpying) {
+					return;
+				}
+
+				// bail if no state change
+				if (isVisible && point.visible) {
+					return;
+				} else if (!isVisible && !point.visible) {
+					return;
+				}
+
+				if (!point.spied) {
+					point.spied = true;
+					point.node.dispatchEvent(new CustomEvent('d2l-scroll-spy-once', {
+						bubbles: true,
+						detail: { key: point.key, node: point.node, visible: isVisible }
+					}));
+					if (point.onceOnly) {
+						return;
+					}
+				}
+
+				fastdom.measure(function() {
+
+					// get new offsets since they may have changed during delay
+					var spyBoundaries = this.__getSpyBoundaries();
+
+					// bail if prev visible but no longer, or is prev not visible but is now
+					if (this.__isPointBottomVisible(spyBoundaries, point.node) !== isVisible) {
+						return;
+					}
+
+					if (isVisible) {
+						point.visible = true;
+					} else {
+						point.visible = false;
+					}
+
+					point.node.dispatchEvent(new CustomEvent('d2l-scroll-spy', {
+						bubbles: true,
+						detail: { key: point.key, node: point.node, visible: point.visible }
+					}));
+
+				}.bind(this));
+
+			}.bind(this), point.duration);
+
+		},
+
+		__startSpying: function() {
+
+			this.__isSpying = true;
+
+			var isPassiveSupported = this.__isPassiveSupported();
+
+			window.addEventListener('scroll', this.__spy, isPassiveSupported ? { passive: true } : false);
+			window.addEventListener('resize', this.__spy, isPassiveSupported ? { passive: true } : false);
+			document.addEventListener('touchmove', this.__spy, isPassiveSupported ? { passive: true } : false);
+			document.addEventListener('MSPointerMove', this.__spy, isPassiveSupported ? { passive: true } : false);
+
+			//setTimeout(this.__spy, 1);
+			requestAnimationFrame(this.__spy);
+
+		},
+
+		__stopSpying: function() {
+
+			this.__isSpying = false;
+
+			var isPassiveSupported = this.__isPassiveSupported();
+
+			window.removeEventListener('scroll', this.__spy, isPassiveSupported ? { passive: true } : false);
+			window.removeEventListener('resize', this.__spy, isPassiveSupported ? { passive: true } : false);
+			document.removeEventListener('touchmove', this.__spy, isPassiveSupported ? { passive: true } : false);
+			document.removeEventListener('MSPointerMove', this.__spy, isPassiveSupported ? { passive: true } : false);
+
+		},
+
+		__updateSpying: function() {
+			if (this.__isSpying) {
+				if (!this.__isEnabled || Object.keys(this.__points).length === 0) {
+					this.__stopSpying();
+				}
+			} else {
+				if (this.__isEnabled && Object.keys(this.__points).length > 0) {
+					this.__startSpying();
+				}
+			}
+		}
+
+	};
+
+	ScrollSpy.__spy = ScrollSpy.__spy.bind(ScrollSpy);
+
+	window.D2L = window.D2L || {};
+	window.D2L.ScrollSpy = ScrollSpy;
+
+})();
+</script>

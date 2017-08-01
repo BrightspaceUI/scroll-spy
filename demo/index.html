@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>d2l-scrollspy demo</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<link rel="import" href="../../d2l-colors/d2l-colors.html">
+		<link rel="import" href="../d2l-scroll-spy.html">
+		<link rel="import" href="../d2l-scroll-point.html">
+		<custom-style>
+			<style is="custom-style">
+				html {
+					color: var(--d2l-color-ferrite);
+					font-family: verdana;
+					font-size: 14px;
+				}
+				#scroll-point-summary {
+					background-color: rgba(255, 255, 255, 0.7);
+					border: 1px solid #ccc;
+					box-sizing: border-box;
+					height: calc(100vh - 40px);
+					margin: 20px;
+					padding: 20px;
+					position: fixed;
+					width: 300px;
+					z-index: 1;
+				}
+				#scroll-point-summary ul {
+					list-style: none;
+					margin: 0;
+					padding: 0;
+				}
+				#scroll-point-summary li {
+					margin: 15px 0;
+				}
+				d2l-scroll-point, .scroll-points > div {
+					box-sizing: border-box;
+					display: block;
+					padding: 20px;
+					position: relative;
+					text-align: right;
+				}
+				d2l-scroll-point > div, .scroll-points > div > div {
+					position: absolute;
+					right: 10px;
+					bottom: 4px;
+				}
+				d2l-scroll-point[key="pt1"] {
+					background-color: var(--d2l-color-citrine-plus-1);
+				}
+				d2l-scroll-point[key="pt2"] {
+					background-color: var(--d2l-color-topaz-plus-1);
+				}
+				d2l-scroll-point[key="pt3"] {
+					background-color: var(--d2l-color-cinnabar-plus-2);
+				}
+				d2l-scroll-point[key="pt4"] {
+					background-color: var(--d2l-color-celestine-plus-2);
+				}
+				d2l-scroll-point[key="pt5"] {
+					background-color: var(--d2l-color-tourmaline-plus-2);
+				}
+				#point6 {
+					background-color: var(--d2l-color-peridot-plus-1);
+				}
+			</style>
+		</custom-style>
+	</head>
+	<body>
+
+		<div id="scroll-point-summary">
+			<h2>Summary</h2>
+			<ul>
+				<li>point 1 <div id="pt1-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
+				<li>point 2 <div id="pt2-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
+				<li>point 3 <div id="pt3-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
+				<li>point 4 <div id="pt4-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
+				<li>point 5 <div id="pt5-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
+				<li>point 6 <div id="pt6-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
+			</ul>
+		</div>
+
+		<div class="scroll-points" style="height:3000px;">
+			<d2l-scroll-point key="pt1" duration="500" style="height: 70px;"><div>scroll point 1</div></d2l-scroll-point>
+			<d2l-scroll-point key="pt2" duration="500" style="height: 70px;"><div>scroll point 2</div></d2l-scroll-point>
+			<d2l-scroll-point key="pt3" duration="500" style="height: 600px;"><div>scroll point 3</div></d2l-scroll-point>
+			<d2l-scroll-point key="pt4" duration="500" style="height: 70px;"><div>scroll point 4</div></d2l-scroll-point>
+			<d2l-scroll-point key="pt5" duration="500" style="height: 150px;"><div>scroll point 5</div></d2l-scroll-point>
+			<div id="point6" style="height: 70px;"><div>scroll point 6<div></div>
+		</div>
+
+		<script>
+		window.addEventListener('WebComponentsReady', function() {
+
+			document.addEventListener('d2l-scroll-spy', function(e) {
+				var ptState = document.querySelector('#' + e.detail.key + '-state > #spy-state');
+				ptState.textContent = (e.detail.visible ? 'yes' : 'no');
+			});
+
+			document.addEventListener('d2l-scroll-spy-once', function(e) {
+				var ptState = document.querySelector('#' + e.detail.key + '-state > #spy-once-state');
+				ptState.textContent = (e.detail.visible ? 'yes' : 'no');
+			});
+
+			var spyOnce = (window.location.search.indexOf('spy-once=true') > -1);
+			// manual reg of pt5...
+			D2L.ScrollSpy.registerPoint('pt6', document.getElementById('point6'), { duration: 500, onlyOnce: spyOnce });
+			D2L.ScrollSpy.setEnabled(true);
+		});
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,54 @@
+<link rel="import" href="../polymer/polymer.html">
+<!--
+`d2l-scroll-point`
+Polymer-based web component for D2L scroll points
+
+@demo demo/index.html
+-->
+
+<dom-module id="d2l-scroll-point">
+	<template strip-whitespace>
+	<slot></slot>
+	</template>
+	<script>
+		Polymer({
+			is: 'd2l-scroll-point',
+			properties: {
+				/**
+				 * Gets or sets the duration the item must be spied before trigger event.
+				 */
+				duration: {
+					type: Number,
+					reflectToAttribute: true
+				},
+				/**
+				 * Gets or sets the scroll-point key.
+				 */
+				key: {
+					type: String,
+					reflectToAttribute: true
+				},
+				/**
+				 * Gets or sets whether the scroll-point is only spied once.
+				 */
+				onceOnly: {
+					type: Boolean,
+					reflectToAttribute: true
+				}
+			},
+
+			attached: function() {
+				D2L.ScrollSpy.registerPoint(
+					this.key,
+					this,
+					{ onceOnly: this.onceOnly, duration: this.duration }
+				);
+			},
+
+			detached: function() {
+				D2L.ScrollSpy.unregisterPoint(this.key);
+			}
+
+		});
+	</script>
+</dom-module>
