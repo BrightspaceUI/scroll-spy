@@ -99,13 +99,10 @@
 
 			for (var i = 0; i < this.__points.length; i++) {
 				var point = this.__points[i];
-
 				if (point.onceOnly && point.spied) {
 					continue;
 				}
-
 				this.__spyPoint(point);
-
 			}
 
 		},
@@ -191,7 +188,6 @@
 			document.addEventListener('touchmove', this.__spy, isPassiveSupported ? { passive: true } : false);
 			document.addEventListener('MSPointerMove', this.__spy, isPassiveSupported ? { passive: true } : false);
 
-			//setTimeout(this.__spy, 1);
 			requestAnimationFrame(this.__spy);
 
 		},
