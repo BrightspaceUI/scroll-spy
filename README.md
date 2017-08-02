@@ -24,6 +24,8 @@ Include the [webcomponents.js](http://webcomponents.org/polyfills/) "lite" polyf
 
 Scroll-spy can be used with plain vanilla JS, but a web component is provided to make set-up even easier.
 
+Note: Scroll-spy relies on [Promise](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise), so for IE11, a polyfill is required.
+
 ### Vanilla JS
 
 ```html

@@ -1,6 +1,7 @@
 {
   "extends": "brightspace/polymer-config",
   "globals": {
-    "fastdom": true
+    "fastdom": true,
+    "Promise": true
   }
 }
