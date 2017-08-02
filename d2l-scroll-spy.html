@@ -65,17 +65,6 @@
 			return null;
 		},
 
-		__getSpyBoundaries: function() {
-			// area relative to document being viewed
-			//var spyTop = document.body.scrollTop;
-			var spyTop = window.pageYOffset;
-			var spyBottom = spyTop + window.innerHeight;
-			return {
-				top : spyTop,
-				bottom : spyBottom
-			};
-		},
-
 		__isPassiveSupported: function() {
 			var passiveSupported = false;
 			try {
@@ -90,9 +79,9 @@
 			return passiveSupported;
 		},
 
-		__isPointBottomVisible: function(spyBoundaries, node) {
-			var pointOffsetBottom = node.offsetTop + node.offsetHeight;
-			return (pointOffsetBottom >= spyBoundaries.top && pointOffsetBottom <= spyBoundaries.bottom);
+		__isPointBottomVisible: function(node) {
+			var rect = node.getBoundingClientRect();
+			return (rect.bottom > 0 && rect.bottom < window.innerHeight);
 		},
 
 		__spy: function() {
@@ -108,12 +97,8 @@
 		},
 
 		__spyPoint: function(point) {
-
 			fastdom.measure(function() {
-
-				var spyBoundaries = this.__getSpyBoundaries();
-				var isBottomVisible = this.__isPointBottomVisible(spyBoundaries, point.node);
-
+				var isBottomVisible = this.__isPointBottomVisible(point.node);
 				if (isBottomVisible && !point.visible) {
 					this.__spyDelayed(point, true);
 				} else if (!isBottomVisible && point.visible) {
@@ -152,11 +137,8 @@
 
 				fastdom.measure(function() {
 
-					// get new offsets since they may have changed during delay
-					var spyBoundaries = this.__getSpyBoundaries();
-
 					// bail if prev visible but no longer, or is prev not visible but is now
-					if (this.__isPointBottomVisible(spyBoundaries, point.node) !== isVisible) {
+					if (this.__isPointBottomVisible(point.node) !== isVisible) {
 						return;
 					}
 
