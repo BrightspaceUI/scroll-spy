@@ -1,0 +1,25 @@
+{
+  "name": "d2l-scroll-spy",
+  "private": true,
+  "description": "Polymer-based web component and behavior for scroll-spy",
+  "scripts": {
+    "postinstall": "polymer install --variants",
+    "test": "npm run test:lint",
+    "test:lint": "npm run test:lint:wc && npm run test:lint:js",
+    "test:lint:js": "eslint *.html test/*.html demo/*.html",
+    "test:lint:wc": "polymer lint",
+    "test:unit:local": "polymer test --skip-plugin sauce"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BrightspaceUI/scroll-spy.git"
+  },
+  "author": "D2L Corporation",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "eslint": "^4.3.0",
+    "eslint-config-brightspace": "^0.3.1",
+    "eslint-plugin-html": "^3.1.0",
+    "polymer-cli": "^1.3.1"
+  }
+}

@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>d2l-scroll-spy tests</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<script src="../../web-component-tester/browser.js"></script>
+		<script src="../../lie/dist/lie.min.js"></script>
+		<link rel="import" href="../../polymer/polymer.html">
+		<link rel="import" href="../d2l-scroll-spy.html">
+	</head>
+	<body>
+
+		<test-fixture id="simpleFixture">
+			<template>
+				<div>
+					<div id="point1"></div>
+					<div id="point2"></div>
+				</div>
+			</template>
+		</test-fixture>
+
+		<script>
+		describe('d2l-scrollspy', function() {
+
+			var simpleFixture;
+
+			beforeEach(function() {
+				simpleFixture = fixture('simpleFixture');
+				D2L.ScrollSpy.reset();
+			});
+
+			describe('reset', function() {
+
+				it('is initially disabled', function() {
+					expect(D2L.ScrollSpy.__isEnabled).to.be.false;
+				});
+
+				it('is initially not spying', function() {
+					expect(D2L.ScrollSpy.__isSpying).to.be.false;
+				});
+
+				it('is initially has no register scroll points', function() {
+					expect(Object.keys(D2L.ScrollSpy.__points).length).to.equal(0);
+				});
+
+			});
+
+			describe('registerPoint', function() {
+
+				it('registers the point with default options', function() {
+					D2L.ScrollSpy.registerPoint('key1', simpleFixture.querySelector('#point1'));
+					var info = D2L.ScrollSpy.__getPointInfo('key1');
+					expect(info.duration).to.equal(3000);
+					expect(info.onceOnly).to.be.false;
+				});
+
+				it('registers the point with custom options', function() {
+					D2L.ScrollSpy.registerPoint('key1', simpleFixture.querySelector('#point1'), { 'duration': 1000, onceOnly: true });
+					var info = D2L.ScrollSpy.__getPointInfo('key1');
+					expect(info.duration).to.equal(1000);
+					expect(info.onceOnly).to.be.true;
+				});
+
+				it('does not start spying if spying disabled', function() {
+					D2L.ScrollSpy.registerPoint('key1', simpleFixture.querySelector('#point1'));
+					expect(D2L.ScrollSpy.isPointRegistered('key1')).to.be.true;
+					expect(D2L.ScrollSpy.__isSpying).to.be.false;
+				});
+
+				it('does not start spying if key is invalid', function() {
+					D2L.ScrollSpy.registerPoint(null, simpleFixture.querySelector('#point1'));
+					expect(D2L.ScrollSpy.isPointRegistered(null)).to.be.false;
+					expect(D2L.ScrollSpy.__isSpying).to.be.false;
+				});
+
+				it('does not start spying if node is invalid', function() {
+					D2L.ScrollSpy.registerPoint('some key', null);
+					expect(D2L.ScrollSpy.isPointRegistered('some key')).to.be.false;
+					expect(D2L.ScrollSpy.__isSpying).to.be.false;
+				});
+
+				it('starts spying if spying enabled', function() {
+					D2L.ScrollSpy.setEnabled(true);
+					D2L.ScrollSpy.registerPoint('key1', simpleFixture.querySelector('#point1'));
+					expect(D2L.ScrollSpy.isPointRegistered('key1')).to.be.true;
+					expect(D2L.ScrollSpy.__isSpying).to.be.true;
+				});
+
+			});
+
+			describe('unregisterPoint', function() {
+
+				beforeEach(function() {
+					D2L.ScrollSpy.setEnabled(true);
+					D2L.ScrollSpy.registerPoint('key1', simpleFixture.querySelector('#point1'));
+					D2L.ScrollSpy.registerPoint('key2', simpleFixture.querySelector('#point2'));
+				});
+
+				it('keeps spying if there are remaining scroll points', function() {
+					D2L.ScrollSpy.unregisterPoint('key2');
+					expect(D2L.ScrollSpy.isPointRegistered('key1')).to.be.true;
+					expect(D2L.ScrollSpy.isPointRegistered('key2')).to.be.false;
+					expect(D2L.ScrollSpy.__isSpying).to.be.true;
+				});
+
+				it('stops spying if there are no remaining scroll points', function() {
+					D2L.ScrollSpy.unregisterPoint('key1');
+					D2L.ScrollSpy.unregisterPoint('key2');
+					expect(D2L.ScrollSpy.isPointRegistered('key1')).to.be.false;
+					expect(D2L.ScrollSpy.isPointRegistered('key2')).to.be.false;
+					expect(D2L.ScrollSpy.__isSpying).to.be.false;
+				});
+
+			});
+
+			describe('setEnabled', function() {
+
+				it('does not start spying when enabled and there are no scroll points', function() {
+					D2L.ScrollSpy.setEnabled(true);
+					expect(D2L.ScrollSpy.__isSpying).to.be.false;
+				});
+
+				it('starts spying when enabled and there are scroll points', function() {
+					D2L.ScrollSpy.registerPoint('key1', simpleFixture.querySelector('#point1'));
+					D2L.ScrollSpy.setEnabled(true);
+					expect(D2L.ScrollSpy.__isSpying).to.be.true;
+				});
+
+				it('stops spying when disabled and there are scroll points', function() {
+					D2L.ScrollSpy.registerPoint('key1', simpleFixture.querySelector('#point1'));
+					D2L.ScrollSpy.setEnabled(true);
+					expect(D2L.ScrollSpy.__isSpying).to.be.true;
+					D2L.ScrollSpy.setEnabled(false);
+					expect(D2L.ScrollSpy.__isSpying).to.be.false;
+				});
+
+			});
+
+		});
+
+		</script>
+	</body>
+</html>

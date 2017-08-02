@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>d2l-scroll-point tests</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+		<script src="../../web-component-tester/browser.js"></script>
+		<script src="../../lie/dist/lie.min.js"></script>
+		<link rel="import" href="../../polymer/polymer.html">
+		<link rel="import" href="../d2l-scroll-spy.html">
+		<link rel="import" href="../d2l-scroll-point.html">
+	</head>
+	<body>
+
+		<test-fixture id="simpleFixture">
+			<template>
+				<div>
+					<d2l-scroll-point key="pt1"></d2l-scroll-point>
+					<d2l-scroll-point key="pt2" duration="1000" once-only></d2l-scroll-point>
+				</div>
+			</template>
+		</test-fixture>
+
+		<script>
+		describe('d2l-scrollspy', function() {
+
+			var simpleFixture;
+
+			beforeEach(function() {
+				simpleFixture = fixture('simpleFixture');
+			});
+
+			afterEach(function() {
+				D2L.ScrollSpy.reset();
+			});
+
+			it('registers point initially on page', function() {
+				expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.true;
+			});
+
+			it('registers point with default options', function() {
+				var info = D2L.ScrollSpy.__getPointInfo('pt1');
+				expect(info.duration).to.equal(3000);
+				expect(info.onceOnly).to.be.false;
+			});
+
+			it('registers point with custom options', function() {
+				var info = D2L.ScrollSpy.__getPointInfo('pt2');
+				expect(info.duration).to.equal(1000);
+				expect(info.onceOnly).to.be.true;
+			});
+
+			it('registers point when attached to DOM', function() {
+				var pt = document.createElement('d2l-scroll-point');
+				pt.setAttribute('key', 'pt3');
+				expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.false;
+				simpleFixture.appendChild(pt);
+				expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.true;
+			});
+
+			it('unregisters point when removed from DOM', function() {
+				var pt = simpleFixture.querySelector('[key="pt1"]');
+				expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.true;
+				simpleFixture.removeChild(pt);
+				expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.false;
+			});
+
+		});
+
+		</script>
+	</body>
+</html>
