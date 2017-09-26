@@ -212,5 +212,7 @@
 	window.D2L = window.D2L || {};
 	window.D2L.ScrollSpy = ScrollSpy;
 
+	document.dispatchEvent(new CustomEvent('d2l-scroll-spy-ready', {bubbles: true} ));
+
 })();
 </script>
