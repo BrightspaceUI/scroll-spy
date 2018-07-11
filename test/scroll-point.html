@@ -50,19 +50,25 @@
 				expect(info.onceOnly).to.be.true;
 			});
 
-			it('registers point when attached to DOM', function() {
+			it('registers point when attached to DOM', function(done) {
 				var pt = document.createElement('d2l-scroll-point');
 				pt.setAttribute('key', 'pt3');
 				expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.false;
 				simpleFixture.appendChild(pt);
-				expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.true;
+				flush(function() {
+					expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.true;
+					done();
+				});
 			});
 
-			it('unregisters point when removed from DOM', function() {
+			it('unregisters point when removed from DOM', function(done) {
 				var pt = simpleFixture.querySelector('[key="pt1"]');
 				expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.true;
 				simpleFixture.removeChild(pt);
-				expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.false;
+				flush(function() {
+					expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.false;
+					done();
+				});
 			});
 
 		});
