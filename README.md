@@ -111,13 +111,13 @@ polymer serve
 To lint ([eslint](http://eslint.org/) and [Polymer lint](https://www.polymer-project.org/2.0/docs/tools/polymer-cli-commands#lint)):
 
 ```shell
-npm run test:lint
+npm run lint
 ```
 
 To run unit tests locally using [Polymer test](https://www.polymer-project.org/2.0/docs/tools/polymer-cli-commands#tests):
 
 ```shell
-polymer test --skip-plugin sauce
+npm run test:polymer:local
 ```
 
 [bower-url]: http://bower.io/search/?q=d2l-scroll-spy
