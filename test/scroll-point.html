@@ -5,11 +5,12 @@
 		<title>d2l-scroll-point tests</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<script src="../../lie/dist/lie.min.js"></script>
-		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-		<script src="../../web-component-tester/browser.js"></script>
-		<link rel="import" href="../../polymer/polymer.html">
-		<link rel="import" href="../d2l-scroll-spy.html">
-		<link rel="import" href="../d2l-scroll-point.html">
+		<script src="../../@babel/polyfill/browser.js"></script>
+		<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+		<script src="../../wct-browser-legacy/browser.js"></script>
+		<script type="module" src="../../@polymer/polymer/polymer-legacy.js"></script>
+		<script type="module" src="../d2l-scroll-spy.js"></script>
+		<script type="module" src="../d2l-scroll-point.js"></script>
 	</head>
 	<body>
 
@@ -22,58 +23,60 @@
 			</template>
 		</test-fixture>
 
-		<script>
-		describe('d2l-scrollspy', function() {
+		<script type="module">
+import '../../@polymer/polymer/polymer-legacy.js';
+import '../d2l-scroll-spy.js';
+import '../d2l-scroll-point.js';
+describe('d2l-scrollspy', function() {
 
-			var simpleFixture;
+	var simpleFixture;
 
-			beforeEach(function() {
-				simpleFixture = fixture('simpleFixture');
-			});
+	beforeEach(function() {
+		simpleFixture = fixture('simpleFixture');
+	});
 
-			afterEach(function() {
-				D2L.ScrollSpy.reset();
-			});
+	afterEach(function() {
+		D2L.ScrollSpy.reset();
+	});
 
-			it('registers point initially on page', function() {
-				expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.true;
-			});
+	it('registers point initially on page', function() {
+		expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.true;
+	});
 
-			it('registers point with default options', function() {
-				var info = D2L.ScrollSpy.__getPointInfo('pt1');
-				expect(info.duration).to.equal(3000);
-				expect(info.onceOnly).to.be.false;
-			});
+	it('registers point with default options', function() {
+		var info = D2L.ScrollSpy.__getPointInfo('pt1');
+		expect(info.duration).to.equal(3000);
+		expect(info.onceOnly).to.be.false;
+	});
 
-			it('registers point with custom options', function() {
-				var info = D2L.ScrollSpy.__getPointInfo('pt2');
-				expect(info.duration).to.equal(1000);
-				expect(info.onceOnly).to.be.true;
-			});
+	it('registers point with custom options', function() {
+		var info = D2L.ScrollSpy.__getPointInfo('pt2');
+		expect(info.duration).to.equal(1000);
+		expect(info.onceOnly).to.be.true;
+	});
 
-			it('registers point when attached to DOM', function(done) {
-				var pt = document.createElement('d2l-scroll-point');
-				pt.setAttribute('key', 'pt3');
-				expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.false;
-				simpleFixture.appendChild(pt);
-				flush(function() {
-					expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.true;
-					done();
-				});
-			});
-
-			it('unregisters point when removed from DOM', function(done) {
-				var pt = simpleFixture.querySelector('[key="pt1"]');
-				expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.true;
-				simpleFixture.removeChild(pt);
-				flush(function() {
-					expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.false;
-					done();
-				});
-			});
-
+	it('registers point when attached to DOM', function(done) {
+		var pt = document.createElement('d2l-scroll-point');
+		pt.setAttribute('key', 'pt3');
+		expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.false;
+		simpleFixture.appendChild(pt);
+		flush(function() {
+			expect(D2L.ScrollSpy.isPointRegistered('pt3')).to.be.true;
+			done();
 		});
+	});
 
-		</script>
+	it('unregisters point when removed from DOM', function(done) {
+		var pt = simpleFixture.querySelector('[key="pt1"]');
+		expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.true;
+		simpleFixture.removeChild(pt);
+		flush(function() {
+			expect(D2L.ScrollSpy.isPointRegistered('pt1')).to.be.false;
+			done();
+		});
+	});
+
+});
+</script>
 	</body>
 </html>
