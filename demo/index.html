@@ -5,14 +5,31 @@
 		<title>d2l-scroll-spy demo</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 		<script src="../../lie/dist/lie.min.js"></script>
-		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-		<link rel="import" href="../../d2l-typography/d2l-typography.html">
-		<link rel="import" href="../d2l-scroll-spy.html">
-		<link rel="import" href="../d2l-scroll-point.html">
-		<custom-style include="d2l-typography">
+		<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+		<script type="module" src="../../d2l-typography/d2l-typography.js"></script>
+		<script type="module" src="../d2l-scroll-spy.js"></script>
+		<script type="module" src="../d2l-scroll-point.js"></script>
+		<!-- FIXME(polymer-modulizer):
+		These imperative modules that innerHTML your HTML are
+		a hacky way to be sure that any mixins in included style
+		modules are ready before any elements that reference them are
+		instantiated, otherwise the CSS @apply mixin polyfill won't be
+		able to expand the underlying CSS custom properties.
+		See: https://github.com/Polymer/polymer-modulizer/issues/154
+		-->
+	<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style include="d2l-typography">
 			<style is="custom-style" include="d2l-typography"></style>
-		</custom-style>
-		<custom-style>
+		</custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+		<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
 			<style is="custom-style">
 				html {
 					color: var(--d2l-color-ferrite);
@@ -69,11 +86,17 @@
 					background-color: var(--d2l-color-peridot-plus-1);
 				}
 			</style>
-		</custom-style>
+		</custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 	</head>
 	<body>
 
-		<div id="scroll-point-summary">
+		<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div id="scroll-point-summary">
 			<h2>Summary</h2>
 			<ul>
 				<li>point 1 <div id="pt1-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
@@ -83,9 +106,15 @@
 				<li>point 5 <div id="pt5-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
 				<li>point 6 <div id="pt6-state">spying: <span id="spy-state">no</span>; spied once: <span id="spy-once-state">no</span></div></li>
 			</ul>
-		</div>
+		</div>`;
 
-		<div class="scroll-points" style="height:3000px;">
+document.body.appendChild($_documentContainer.content);
+</script>
+
+		<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="scroll-points" style="height:3000px;">
 			<d2l-scroll-point key="pt1" duration="500" style="height: 70px;"><div>scroll point 1</div></d2l-scroll-point>
 			<d2l-scroll-point key="pt2" duration="500" style="height: 70px;"><div>scroll point 2</div></d2l-scroll-point>
 			<d2l-scroll-point key="pt3" duration="500" style="height: 600px;"><div>scroll point 3</div></d2l-scroll-point>
@@ -113,6 +142,10 @@
 			D2L.ScrollSpy.setEnabled(true);
 		});
 
-		</script>
-	</body>
-</html>
+		&lt;/script>
+	
+
+</div></div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
