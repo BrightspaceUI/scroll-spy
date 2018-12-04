@@ -1,4 +1,4 @@
-import '../fastdom/fastdom.js';
+import 'fastdom/fastdom.js';
 
 var ScrollSpy = {
 

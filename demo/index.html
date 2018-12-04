@@ -130,23 +130,19 @@ document.body.appendChild($_documentContainer.content);
 
 <script>
 window.addEventListener('WebComponentsReady', function() {
-
 	document.addEventListener('d2l-scroll-spy', function(e) {
 		var ptState = document.querySelector('#' + e.detail.key + '-state > #spy-state');
 		ptState.textContent = (e.detail.visible ? 'yes' : 'no');
 	});
-
 	document.addEventListener('d2l-scroll-spy-once', function(e) {
 		var ptState = document.querySelector('#' + e.detail.key + '-state > #spy-once-state');
 		ptState.textContent = (e.detail.visible ? 'yes' : 'no');
 	});
-
 	var spyOnce = (window.location.search.indexOf('spy-once=true') > -1);
 	// manual reg of pt5...
 	D2L.ScrollSpy.registerPoint('pt6', document.getElementById('point6'), { duration: 500, onlyOnce: spyOnce });
 	D2L.ScrollSpy.setEnabled(true);
 });
-
 </script>
 </body>
 </html>
