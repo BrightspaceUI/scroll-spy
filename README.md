@@ -122,5 +122,5 @@ npm run test:polymer:local
 
 [bower-url]: http://bower.io/search/?q=d2l-scroll-spy
 [bower-image]: https://img.shields.io/bower/v/d2l-scroll-spy.svg
-[ci-image]: https://travis-ci.org/BrightspaceUI/scroll-spy.svg?branch=master
-[ci-url]: https://travis-ci.org/BrightspaceUI/scroll-spy
+[ci-image]: https://travis-ci.com/BrightspaceUI/scroll-spy.svg?branch=master
+[ci-url]: https://travis-ci.com/BrightspaceUI/scroll-spy
