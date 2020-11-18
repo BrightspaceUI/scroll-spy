@@ -1,6 +1,6 @@
 # d2l-scroll-spy
-[![Bower version][bower-image]][bower-url]
-[![Build status][ci-image]][ci-url]
+
+![Build status](https://github.com/BrightspaceUI/scroll-spy/workflows/CI/badge.svg)
 
 Vanilla JS scroll-spy implementation and [Polymer](https://www.polymer-project.org/1.0/)-based web component for scroll points.
 
@@ -120,7 +120,12 @@ To run unit tests locally using [Polymer test](https://www.polymer-project.org/2
 npm run test:polymer:local
 ```
 
-[bower-url]: http://bower.io/search/?q=d2l-scroll-spy
-[bower-image]: https://img.shields.io/bower/v/d2l-scroll-spy.svg
-[ci-image]: https://travis-ci.com/BrightspaceUI/scroll-spy.svg?branch=master
-[ci-url]: https://travis-ci.com/BrightspaceUI/scroll-spy
+## Versioning & Releasing
+
+All version changes should obey [semantic versioning](https://semver.org/) rules.
+
+Releases use the [semantic-release](https://semantic-release.gitbook.io/) tooling and the [angular preset](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular) for commit message syntax. Upon release, the version in `package.json` is updated, a tag and GitHub release is created and a new package will be deployed to NPM.
+
+Commits prefixed with `feat` will trigger a minor release, while `fix` or `perf` will trigger a patch release. A commit containing `BREAKING CHANGE` will cause a major release to occur.
+
+Other useful prefixes that will not trigger a release: `build`, `ci`, `docs`, `refactor`, `style` and `test`. More details in the [Angular Contribution Guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#type).
