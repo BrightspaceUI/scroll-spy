@@ -1,7 +1,5 @@
 # d2l-scroll-spy
 
-![Build status](https://github.com/BrightspaceUI/scroll-spy/workflows/CI/badge.svg)
-
 Vanilla JS scroll-spy implementation and [Polymer](https://www.polymer-project.org/1.0/)-based web component for scroll points.
 
 ## Installation
